@@ -1,0 +1,12 @@
+{
+  "name": "focus-up",
+  "version": "1.0.0",
+  "description": "This is a Google Chrome extension aimed at helping those with attention-defecit disorders focus.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Weston Leonard",
+  "license": "ISC",
+  "type": "module"
+}

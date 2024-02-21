@@ -1,0 +1,11 @@
+{
+    "name": "FocusUp",
+    "version": "1.0.0",
+    "description": "This is a Google Chrome extension aimed at helping those with attention-defecit disorders focus.",
+    "manifest_version": 3,
+    "author": "Weston Leonard",
+    "action": {
+        "default_popup": "index.html",
+        "default_title": "FocusUp"
+    }
+}
