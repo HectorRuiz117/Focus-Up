@@ -2,25 +2,25 @@
 const toolbarHTML = `
 <div class="toolbar" id="toolbar">
 <button id="fontAlterationButton">
-<img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/fontAlteration.svg">
+    <img src="${chrome.runtime.getURL("images/fontAlteration.svg")}">
 </button>
 <button id="taskListButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/taskList.svg">
+    <img src="${chrome.runtime.getURL("images/taskList.svg")}">
 </button>
 <button id="progressBarButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/progressBar.svg">
+    <img src="${chrome.runtime.getURL("images/progressBar.svg")}">
 </button>
 <button id="timersButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/timers.svg">
+    <img src="${chrome.runtime.getURL("images/timers.svg")}">
 </button>
 <button id="fidgetButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/fidget.svg">
+    <img src="${chrome.runtime.getURL("images/fidget.svg")}">
 </button>
 <button id="AGEButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/AGE.svg">
+    <img src="${chrome.runtime.getURL("images/AGE.svg")}">
 </button>
 <button id="settingsButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/settings.svg">
+    <img src="${chrome.runtime.getURL("images/settings.svg")}">
 </button>
 </div>
 <div class="menu" id="fontAlterationMenu">
@@ -30,6 +30,22 @@ const toolbarHTML = `
     <li>Option 2</li>
     <li>Option 3</li>
 </ul>
+</div>
+
+<div class = "toolbar" id = "progressMenu">
+<button id="backButton">
+    <img src="${chrome.runtime.getURL("images/back.svg")}">
+</button>
+<button id="dragFlag">
+    <img id = "flag" src="${chrome.runtime.getURL("images/progressBar.svg")}" draggable="true">
+</button>
+
+<!-- PB BAR -->
+<div class = "progressBarContainer" id = "PBC"></div>  
+
+<button id = "trashIcon">
+    <img src="${chrome.runtime.getURL("images/trashIcon.svg")}">
+</button>
 </div>
 `;
 document.body.insertAdjacentHTML('afterbegin', toolbarHTML);
@@ -121,4 +137,34 @@ document.getElementById("AGEButton").addEventListener("click", function() {
 
 document.getElementById("settingsButton").addEventListener("click", function() {
 
+});
+
+const progressBar = document.getElementById("progress-bar");
+const flag = document.getElementById("flag");
+
+let progress = 0;
+
+flag.addEventListener("dragstart", (event) => {
+  event.dataTransfer.setData("flag", event.target.id);
+});
+
+flag.addEventListener("dragend", () => {
+  const flagPosition = flag.getBoundingClientRect();
+  const centerX = window.innerWidth / 2;
+  const distance = Math.abs(centerX - flagPosition.left);
+  const maxDistance = window.innerWidth / 2;
+  progress = (distance / maxDistance) * 100;
+  progressBar.style.width = `${progress}%`;
+});
+
+document.body.addEventListener("dragover", (event) => {
+  event.preventDefault();
+});
+
+document.body.addEventListener("drop", (event) => {
+  event.preventDefault();
+  const flagId = event.dataTransfer.getData("flag");
+  const flagElement = document.getElementById(flagId);
+  const dropZone = event.target;
+  dropZone.appendChild(flagElement);
 });
