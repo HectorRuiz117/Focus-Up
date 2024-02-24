@@ -13,6 +13,12 @@
     align-items: center;
 }
 
+.toolbar button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
 .toolbar button:hover {
     background-color: #777;
 }
