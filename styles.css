@@ -9,7 +9,6 @@
     border-bottom-left-radius: 50px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
     align-items: center;
     z-index: 9999;
 }
@@ -21,23 +20,55 @@
     height: 30px;
     border-radius: 100%;
     z-index: 9999;
+    display: fixed;
+    margin: 5px;
 }
 
 .toolbar button:hover {
     background-color: #777;
 }
 
+.fontAlterationButtons {
+    display: none;
+}
+
+.PBButtons{
+    display: none;
+}
+.progressBar {
+    position: relative;
+    width: auto; /* Fill width? */
+    height: 160px; /* Height for container */
+    flex-direction: column;
+    align-items: center;
+    z-index: 9999;
+    
+  }
+  
+  .progress {
+    width: 47%;
+    margin-right: 47px;
+    height: 100%; /* Fill vertically? */
+    display: none;
+    background-color: #59C3DA;
+    align-items: center;
+  }
+
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
+
 .menu {
-    display: none; 
-    position: fixed;
+    display: none; /* Hide the menu by default */
+    position: fixed; /* Position the menu relative to the toolbar */
     background-color: #333;
     padding: 10px;
     width: 191px;
     height: 177px;
     flex-shrink: 0;
     z-index: 9999;
-}
-
-.menu.show {
-    display: block;
 }
