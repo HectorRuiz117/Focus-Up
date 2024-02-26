@@ -114,18 +114,18 @@ const fontAlterationButtons = document.getElementsByClassName('fontAlterationBut
 fontAlterationButton.addEventListener('click', () => {
     for (let button of fontAlterationButtons) {
         button.classList.toggle('show');
-    }  
+    } 
 
     for (let button of MainButtons) {
         button.classList.toggle('hide');
-    }  
+    }
    
     const backButton = document.getElementById('backButtonFA');
     const fontConversionButton = document.getElementById('fontConversionButton');
     const bionicModeButton = document.getElementById('bionicButton');
     const toDefaultButton = document.getElementById('toDefaultButton');
 
-    backButton.addEventListener('click', () => {
+    function backButtonClickHandler() {
         for (let button of fontAlterationButtons) {
             button.classList.toggle('show');
         }
@@ -133,7 +133,11 @@ fontAlterationButton.addEventListener('click', () => {
         for (let button of MainButtons) {
             button.classList.toggle('hide');
         }
-    });
+
+        backButton.removeEventListener('click', backButtonClickHandler);
+    }
+    backButton.addEventListener('click', backButtonClickHandler);
+
 
     fontConversionButton.addEventListener('click', () => {
         fontAlterationMenu.classList.toggle('show');
@@ -142,7 +146,7 @@ fontAlterationButton.addEventListener('click', () => {
     
         fontSelector.addEventListener('change', function() {
             const selectedFont = fontSelector.value;
-            document.body.style.fontFamily = selectedFont; 
+            document.body.style.fontFamily = selectedFont;
         });
     });
 
