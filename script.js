@@ -1,50 +1,81 @@
 //Injection
-const toolbarHTML = `
-<div class="toolbar" id="toolbar">
-<button id="fontAlterationButton">
-<img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/fontAlteration.svg">
+const MainHTML = `
+<div class="toolbar" id="toolbarMain">
+<button class="mainButtons" id="fontAlterationButton">
+    <img src="${chrome.runtime.getURL("images/fontAlteration.svg")}">
 </button>
-<button id="taskListButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/taskList.svg">
+<button class="mainButtons" id="taskListButton">
+    <img src="${chrome.runtime.getURL("images/taskList.svg")}">
 </button>
-<button id="progressBarButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/progressBar.svg">
+<button class="mainButtons" id="progressBarButton">
+    <img src="${chrome.runtime.getURL("images/progressBar.svg")}">
 </button>
-<button id="timersButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/timers.svg">
+<button class="mainButtons" id="timersButton">
+    <img src="${chrome.runtime.getURL("images/timers.svg")}">
 </button>
-<button id="fidgetButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/fidget.svg">
+<button class="mainButtons" id="fidgetButton">
+    <img src="${chrome.runtime.getURL("images/fidget.svg")}">
 </button>
-<button id="AGEButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/AGE.svg">
+<button class="mainButtons" id="AGEButton">
+    <img src="${chrome.runtime.getURL("images/AGE.svg")}">
 </button>
-<button id="settingsButton">
-    <img src="chrome-extension://ejahjpogbakeolkfmlfaebamkefbcbil/images/settings.svg">
+<button class="mainButtons" id="settingsButton">
+    <img src="${chrome.runtime.getURL("images/settings.svg")}">
+</button>
+<button class="backButtons fontAlterationButtons" id="backButtonFA">
+    <img src="${chrome.runtime.getURL("images/back.svg")}">
+</button>
+<button class="fontAlterationButtons" id="fontConversionButton">
+    <img src="${chrome.runtime.getURL("images/convert.svg")}">
+</button>
+<button class="fontAlterationButtons" id="bionicButton">
+    <img src="${chrome.runtime.getURL("images/bionic.svg")}">
+</button>
+<button class="fontAlterationButtons" id="toDefaultButton">
+    <img src="${chrome.runtime.getURL("images/defaultConvert.svg")}">
 </button>
 </div>
 <div class="menu" id="fontAlterationMenu">
-<!-- Menu content here -->
-<ul>
-    <li>Option 1</li>
-    <li>Option 2</li>
-    <li>Option 3</li>
-</ul>
+    <button id="increaseFont">
+        A+
+    </button>
+    <button id="decreaseFont">
+        A-
+    </button>
+    <button id="originalSize">
+        Original Size
+    </button>
+    <p style="size:15; margin-top:10px; color:white">Change Font Color</p>
+    <input type="color" id="fontColor" name="fontColor" value="#ff0000">
+    <button id="originalColor">
+        Original Color
+    </button>
+    <p style="size:15; margin-top:10px; color:white">Change Highlight Color</p>
+    <input type="color" id="highColor" name="highColor" value="#ff0000">
+    <button id="originalColor">
+        Original Color
+    </button>
+    <p style="size:15; margin-top:10px; color:white">Change Typeface</p>
+    <select id="typeface">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Helvetica">Helvetica</option>
+        <option value="Open Sans">Open Sans</option>
+    </select>
 </div>
 `;
-document.body.insertAdjacentHTML('afterbegin', toolbarHTML);
+document.body.insertAdjacentHTML('afterbegin', MainHTML);
 //End of Injection
 
 
 //Toolbar
-const toolbar = document.getElementById('toolbar');
+const toolbar = document.getElementById('toolbarMain');
 const fontAlterationButton = document.getElementById('fontAlterationButton');
 const fontAlterationMenu = document.getElementById('fontAlterationMenu');
 let isDragging = false;
 let offsetX, offsetY;
 
 toolbar.addEventListener('mousedown', (e) => {
-    // Check if the mouse press is over an empty space within the toolbar
     if (!e.target.closest('button')) {
         isDragging = true;
         offsetX = e.clientX - toolbar.getBoundingClientRect().left;
@@ -58,19 +89,13 @@ document.addEventListener('mousemove', (e) => {
         const newX = e.clientX - offsetX;
         const newY = e.clientY - offsetY;
         
-        // Update the position of the toolbar
         toolbar.style.left = newX + 'px';
         toolbar.style.top = newY + 'px';
         
-        // Get the position of the toolbar relative to the viewport
         const toolbarRect = toolbar.getBoundingClientRect();
         const toolbarLeft = toolbarRect.left;
         const toolbarTop = toolbarRect.top;
         
-        // Get the width of the fontAlterationMenu
-        const menuWidth = fontAlterationMenu.offsetWidth;
-        
-        // Update the position of the fontAlterationMenu relative to the toolbar
         fontAlterationMenu.style.left = toolbarLeft + toolbar.offsetWidth + 10 + 'px';
         fontAlterationMenu.style.top = toolbarTop + 'px';
     }
@@ -81,21 +106,53 @@ document.addEventListener('mouseup', () => {
     toolbar.style.cursor = 'grab';
 });
 //End of Toolbar
-
+ 
 //Font Alteration
+const MainButtons = document.getElementsByClassName('mainButtons');
+const fontAlterationButtons = document.getElementsByClassName('fontAlterationButtons');
+
 fontAlterationButton.addEventListener('click', () => {
-    // Get the position of the toolbar
-    const toolbarRect = toolbar.getBoundingClientRect();
-    const toolbarLeft = toolbarRect.left;
-    const toolbarTop = toolbarRect.top;
+    for (let button of fontAlterationButtons) {
+        button.classList.toggle('show');
+    }  
 
-    // Position the menu to the right of the toolbar with an offset of 10px
-    fontAlterationMenu.style.left = (toolbarLeft + toolbar.offsetWidth + 10) + "px";
+    for (let button of MainButtons) {
+        button.classList.toggle('hide');
+    }  
+   
+    const backButton = document.getElementById('backButtonFA');
+    const fontConversionButton = document.getElementById('fontConversionButton');
+    const bionicModeButton = document.getElementById('bionicButton');
+    const toDefaultButton = document.getElementById('toDefaultButton');
 
-    // Position the menu vertically aligned with the toolbar
-    fontAlterationMenu.style.top = toolbarTop + "px";
+    backButton.addEventListener('click', () => {
+        for (let button of fontAlterationButtons) {
+            button.classList.toggle('show');
+        }
+        
+        for (let button of MainButtons) {
+            button.classList.toggle('hide');
+        }
+    });
 
-    fontAlterationMenu.classList.toggle('show');
+    fontConversionButton.addEventListener('click', () => {
+        fontAlterationMenu.classList.toggle('show');
+    
+        const fontSelector = document.getElementById('typeface');
+    
+        fontSelector.addEventListener('change', function() {
+            const selectedFont = fontSelector.value;
+            document.body.style.fontFamily = selectedFont; 
+        });
+    });
+
+    bionicModeButton.addEventListener('click', () => {
+        console.log('Bionic Mode Button Clicked');
+    });
+
+    toDefaultButton.addEventListener('click', () => {
+        console.log('To Default Button Clicked');
+    });
 });
 //End of Font Alteration
 
