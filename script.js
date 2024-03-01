@@ -1,4 +1,5 @@
 //Injection
+//<img src="${chrome.runtime.getURL("images/fontAlteration.svg")}">
 const MainHTML = `
 <div class="toolbar" id="toolbarMain">
 <button class="mainButtons" id="fontAlterationButton">
@@ -75,6 +76,14 @@ const fontAlterationMenu = document.getElementById('fontAlterationMenu');
 let isDragging = false;
 let offsetX, offsetY;
 
+chrome.storage.sync.get(["toolbarLeftStyle", "toolbarTopStyle"], (result) => {
+    const toolbarLeftStyle = result.toolbarLeftStyle;
+    const toolbarTopStyle = result.toolbarTopStyle;
+
+    toolbar.style.left = toolbarLeftStyle + 'px';
+    toolbar.style.top = toolbarTopStyle + 'px';
+});
+
 toolbar.addEventListener('mousedown', (e) => {
     if (!e.target.closest('button')) {
         isDragging = true;
@@ -84,6 +93,8 @@ toolbar.addEventListener('mousedown', (e) => {
     }
 });
 
+let toolbarLeft;
+let toolbarTop;
 document.addEventListener('mousemove', (e) => {
     if (isDragging) {
         const newX = e.clientX - offsetX;
@@ -92,9 +103,8 @@ document.addEventListener('mousemove', (e) => {
         toolbar.style.left = newX + 'px';
         toolbar.style.top = newY + 'px';
         
-        const toolbarRect = toolbar.getBoundingClientRect();
-        const toolbarLeft = toolbarRect.left;
-        const toolbarTop = toolbarRect.top;
+        toolbarLeft = toolbar.getBoundingClientRect().left;
+        toolbarTop = toolbar.getBoundingClientRect().top;
         
         fontAlterationMenu.style.left = toolbarLeft + toolbar.offsetWidth + 10 + 'px';
         fontAlterationMenu.style.top = toolbarTop + 'px';
@@ -104,6 +114,10 @@ document.addEventListener('mousemove', (e) => {
 document.addEventListener('mouseup', () => {
     isDragging = false;
     toolbar.style.cursor = 'grab';
+    chrome.storage.sync.set({
+        toolbarLeftStyle: toolbarLeft,
+        toolbarTopStyle: toolbarTop
+    });
 });
 //End of Toolbar
  
@@ -114,11 +128,11 @@ const fontAlterationButtons = document.getElementsByClassName('fontAlterationBut
 fontAlterationButton.addEventListener('click', () => {
     for (let button of fontAlterationButtons) {
         button.classList.toggle('show');
-    } 
+    }
 
     for (let button of MainButtons) {
         button.classList.toggle('hide');
-    }
+    } 
    
     const backButton = document.getElementById('backButtonFA');
     const fontConversionButton = document.getElementById('fontConversionButton');
@@ -146,16 +160,16 @@ fontAlterationButton.addEventListener('click', () => {
     
         fontSelector.addEventListener('change', function() {
             const selectedFont = fontSelector.value;
-            document.body.style.fontFamily = selectedFont;
+            document.body.style.fontFamily = selectedFont; 
         });
     });
 
     bionicModeButton.addEventListener('click', () => {
-        console.log('Bionic Mode Button Clicked');
+
     });
 
     toDefaultButton.addEventListener('click', () => {
-        console.log('To Default Button Clicked');
+
     });
 });
 //End of Font Alteration
